@@ -1,7 +1,7 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 import Layout from "./components/Layout";
-import Home from "./pages/Home";
+import Home from "./Pages/Home";
 import Document from "./Pages/Document";
 import Chatbot from "./Pages/Chatbot";
 
