@@ -34,7 +34,7 @@ https://legal-assistant-teal.vercel.app/
 
 ---
 
-### 2. **File Upload **
+### 2. **File Upload**
 - Accepts PDF uploads
 - Extracts content and metadata
 - Chunks text, generates embeddings, and stores in Supabase
