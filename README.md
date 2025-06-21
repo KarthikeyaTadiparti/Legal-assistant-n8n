@@ -103,7 +103,7 @@ npm run dev
 
 # In a new terminal, start client
 cd client
-npm start
+npm run dev
 ```
 
 
