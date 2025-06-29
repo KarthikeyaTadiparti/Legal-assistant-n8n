@@ -2,9 +2,15 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
+const multer = require('multer');
+const FormData = require('form-data');
 
 const app = express();
 const PORT = process.env.PORT || 5001;
+
+// Multer setup for file upload handling
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
 // Enable CORS with specific configuration
 app.use(cors({
@@ -26,6 +32,42 @@ app.use((req, res, next) => {
 // Health check endpoint
 app.get('/health', (req, res) => {
     res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
+//upload
+app.post('/upload', upload.single('file'), async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ error: 'No file uploaded' });
+        }
+
+        // Prepare form data to send to n8n
+        const formData = new FormData();
+        formData.append('file', req.file.buffer, {
+            filename: req.file.originalname,
+            contentType: req.file.mimetype
+        });
+
+        // Send file to n8n upload webhook
+        const response = await axios.post(
+            process.env.N8N_UPLOAD_WEBHOOK,
+            formData,
+            {
+                headers: {
+                    ...formData.getHeaders()
+                }
+            }
+        );
+
+        // Send response in the format expected by frontend
+        res.status(200).json({
+            message: 'File uploaded successfully',
+            data: response.data
+        });
+    } catch (error) {
+        console.error('Error uploading file to n8n:', error.message);
+        res.status(500).json({ error: 'Failed to upload file' });
+    }
 });
 
 // Proxy endpoint for file deletion

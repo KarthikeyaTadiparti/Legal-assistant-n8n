@@ -10,6 +10,7 @@ function Document() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const uploadedFiles = useSelector((state) => state.files.files);
+    
     const handleSubmit = async () => {
         if (!file) {
             alert("Please select a file to upload!");
@@ -23,7 +24,7 @@ function Document() {
 
         try {
             const response = await axios.post(
-                import.meta.env.VITE_DOCUMENT_UPLOAD_URL,
+                `${import.meta.env.VITE_API_BASE_URL}/upload`,
                 formData,
                 {
                     headers: {
